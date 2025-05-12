@@ -93,27 +93,27 @@ namespace Tetca.Windows.NotifyIconMenu
         /// Creates the menu items for the tray icon's context menu.
         /// </summary>
         /// <returns>An enumerable of <see cref="ToolStripMenuItem"/> objects.</returns>
-        private IEnumerable<ToolStripMenuItem> BuildMenuItems()
+        private IEnumerable<ToolStripItem> BuildMenuItems()
         {
-            ToolStripMenuItem main = new ToolStripMenuItem(App.Name);
+            ToolStripMenuItem main = new ToolStripMenuItem("Open main Tetca window");
             main.Click += delegate
             {
                 DoubleClick?.Invoke(this, EventArgs.Empty);
             };
             yield return main;
-            yield return new ToolStripMenuItem("-");
+            yield return new ToolStripSeparator();
             yield return this.TimeDisplay = new ToolStripMenuItem()
             {
                 Enabled = false
             };
-            yield return new ToolStripMenuItem("-");
-            yield return this.MenuItemWithClickAction("Test voice notification",
+            yield return new ToolStripSeparator();
+            yield return this.MenuItemWithClickAction("Test voice",
                 () =>
                 this.dispatcher.Invoke(async () =>
                 {
                     await this.speech.SpeakOnSoundDevice("Testing testing");
                 }));
-            yield return new ToolStripMenuItem("-");
+            yield return new ToolStripSeparator();
             yield return this.MenuItemWithClickAction("Support the developer",
                 () =>
                 this.dispatcher.Invoke(() =>
@@ -136,8 +136,8 @@ namespace Tetca.Windows.NotifyIconMenu
                     });
                     return Task.CompletedTask;
                 }));
-            yield return new ToolStripMenuItem("-");
-            yield return this.MenuItemWithClickAction("Exit",
+            yield return new ToolStripSeparator();
+            yield return this.MenuItemWithClickAction("Close app",
                 () =>
                 this.dispatcher.Invoke(() =>
                 {

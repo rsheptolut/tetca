@@ -4,33 +4,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetca"
+        xmlns:mw="clr-namespace:Tetca.Windows.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>Worked today:</Label>
-            <Label Content="{Binding DebugState.WorkedTodayNormie8h}"></Label>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>Worked this session:</Label>
-            <Label Content="{Binding DebugState.ActivityTime}"></Label>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>Last stretch of idle time:</Label>
-            <Label Content="{Binding DebugState.CurrentIdleTime}"></Label>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>Last activity</Label>
-            <Label Content="{Binding DebugState.LastActivity}"></Label>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>Call detected:</Label>
-            <Label Content="{Binding DebugState.CallDetected}"></Label>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>Input detected:</Label>
-            <Label Content="{Binding DebugState.InputDetected}"></Label>
-        </StackPanel>
-    </StackPanel>
+        Title="TETCA" Height="280" Width="320">
+    <Window.DataContext>
+        <mw:MainWindowViewModelDesigner/>
+    </Window.DataContext>
+    <Grid Margin="20 20 20 20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0">Worked today:</Label>
+        <Label Grid.Row="0" Grid.Column="1" Content="{Binding DebugState.WorkedTodayNormie8h}" ContentStringFormat="{}{0:hh}:{0:mm}:{0:ss}"></Label>
+        <Label Grid.Row="1" Grid.Column="0">Worked this session:</Label>
+        <Label Grid.Row="1" Grid.Column="1" Content="{Binding DebugState.ActivityTime}"  ContentStringFormat="{}{0:hh}:{0:mm}:{0:ss}"></Label>
+        <Label Grid.Row="2" Grid.Column="0">Last stretch of idle time:</Label>
+        <Label Grid.Row="2" Grid.Column="1" Content="{Binding DebugState.CurrentIdleTime}" ContentStringFormat="{}{0:hh}:{0:mm}:{0:ss}"></Label>
+        <Label Grid.Row="3" Grid.Column="0">Last activity:</Label>
+        <Label Grid.Row="3" Grid.Column="1" Content="{Binding DebugState.LastActivity}" ContentStringFormat="{}{0:hh}:{0:mm}:{0:ss} {0:tt}"></Label>
+        <Label Grid.Row="4" Grid.Column="0">Call ongoing now:</Label>
+        <Label Grid.Row="4" Grid.Column="1" Content="{Binding DebugState.CallDetected}"></Label>
+        <Label Grid.Row="5" Grid.Column="0">Mouse / kb input:</Label>
+        <Label Grid.Row="5" Grid.Column="1" Content="{Binding DebugState.InputDetected}"></Label>
+    </Grid>
+   
 </Window>

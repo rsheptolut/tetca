@@ -13,10 +13,10 @@ namespace Tetca
         public MainWindow(MainWindowViewModel viewModel)
         {
             this.ViewModel = viewModel;
-            this.DataContext = viewModel;
             this.WindowState = WindowState.Minimized;
             this.Hide();
             this.InitializeComponent();
+            this.DataContext = viewModel;
 
             this.ResizeMode = ResizeMode.NoResize;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;

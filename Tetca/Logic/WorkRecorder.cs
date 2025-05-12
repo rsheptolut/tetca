@@ -150,6 +150,10 @@ namespace Tetca.Logic
                     this.SaveDayToFile();
                     this.lastFlushed = now;
                 }
+                else
+                {
+                    RecalcGrandTotals();
+                }
             }
         }
 
@@ -238,11 +242,16 @@ namespace Tetca.Logic
 
             if (this.dayModel.Activities.Count > 0)
             {
-                var totalActivity = this.dayModel.Activities.Sum(a => a.WorkDuration.Ticks);
-                var totalBreaks = this.dayModel.Activities.Sum(a => a.BreakDuration.Ticks);
-                this.dayModel.Summary.RecalcGrandTotals(new TimeSpan(totalActivity), new TimeSpan(totalBreaks));
+                this.RecalcGrandTotals();
                 this.WriteAsJsonFile(dailyFilePath, this.dayModel);
             }
+        }
+
+        private void RecalcGrandTotals()
+        {
+            var totalActivity = this.dayModel.Activities.Sum(a => a.WorkDuration.Ticks);
+            var totalBreaks = this.dayModel.Activities.Sum(a => a.BreakDuration.Ticks);
+            this.dayModel.Summary.RecalcGrandTotals(new TimeSpan(totalActivity), new TimeSpan(totalBreaks));
         }
 
         private static string GetReportsDirectory()

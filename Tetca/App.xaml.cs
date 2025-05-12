@@ -100,8 +100,15 @@ namespace Tetca
         /// <param name="e">The event arguments.</param>
         private void NotifyIcon_DoubleClicked(object sender, EventArgs e)
         {
-            this.core.MainWindow.WindowState = WindowState.Normal;
-            this.core.MainWindow.Show();
+            if (this.core.MainWindow.WindowState != WindowState.Normal || !this.core.MainWindow.IsVisible)
+            {
+                this.core.MainWindow.WindowState = WindowState.Normal;
+                this.core.MainWindow.Show();
+            }
+            else
+            {
+                this.core.MainWindow.Hide();
+            }
         }
 
         /// <summary>
