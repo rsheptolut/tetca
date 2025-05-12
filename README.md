@@ -1,13 +1,14 @@
-﻿# Tetca
+﻿# TETCA
 
 ## Descripton
 
-A helper that measures your work activity and reminds you to stop working by talking to you. No AI is used, just simple customizable predefined phrases. No button pushing necessary, because the app automatically measures your mouse, keyboard and meeting activity, filtering out noise. Suits programmers and similar, especially remote workers with flexible hours. Provides you a report of how much time you've worked each day.
+A helper that measures your work activity on your Windows PC and reminds you to stop working by talking to you. No AI is used, just simple customizable predefined phrases. No button pushing necessary, because the app automatically measures your mouse, keyboard and meeting activity, filtering out noise. Suits programmers and similar, especially remote workers with flexible hours. Provides you a report of how much time you've worked each day.
 
 ## Name
 
-TETCA = Tool to Effortlessly Track Computer Activity
-Also тётка roughly translates to 'lady', and that's what we're calling her at home, because its main interface is speech synthesis in a woman's voice.
+TETCA = Tool for Effortless Tracking of Computer Activity
+
+Also, тётка roughly translates to 'lady', and that's what we're calling her at home, because its main interface is speech synthesis in a woman's voice.
 
 ## Features
 
