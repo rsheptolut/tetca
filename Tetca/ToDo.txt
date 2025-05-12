@@ -1,0 +1,127 @@
+﻿- Include in activity log a summary of what the user was doing - active apps/windows, calls
+
+- Add logging for debugging
+
+- Show a confirmation window to confirm whether you're still working or on break. Then after the break ask if the break was really a break instead of an idle time of thinking sitting at the chair.
+
+- Remove the need to close the program
+  - Allow to Snooze - logged?
+  - Make closing more difficult (under an option)
+  - Log app shutdown and startup times, notify of shutdowns too, including crashes
+
+- Improve installation experience
+
+- Test on PC without .NET 9
+
+- Test on PCs without voice engine
+
+- React and log exceptions better
+
+- Add more logging for troubleshooting, allow to turn on/off
+
+- Vary the reminders to prevent the user getting used to them
+	- Make the reminder window bigger each time
+	- Put the close button in a different place each time
+	- Force to interact with the window after some time passes
+	- Have the user solve a simple task when it happens
+	- Use GenAI (a text generator) to vary the reminders
+	- Use an AI art generator to supplement messages with images to grab attention
+	- Use some sort of DB of images/quotes, etc
+	- Suggestions of what to do on a break, show 3 options and allow to choose. Each option gets you a reward / penalty?
+
+- Allow playing sounds like mp3s
+
+- Make more configurable
+	- Text prompts
+	- Plug ins of what to do for all events / plugin trackers (easier to fork than plugin probably)
+	- Modular configuration (for example: work session, break, day work, etc))
+	- Script configuration (allow to define config as a Builder pattern)
+	- Configuration UI
+
+- "It's just late" reminders
+	- Don't call back to work if it's late
+	- Remind to stop working if it's late
+
+- Return sound device settings to what they were before voice notification
+
+- Mute sound when it's late and a break is detected, unmute when deliberate activity detected
+
+- Allow to configure 8h normalization
+
+- Chat based reminders: send me messages like a human, accept answers (like a chat bot) with reasoning, work done details, etc
+	40 minutes: first reminder
+
+	Hey! Please finish up your work, it's soon going to be time for a break!
+
+	Just record here what you were doing and you can continue where you left off super easy!
+
+	You've been working for 40 minutes, so you must be feeling a bit tired and sore.
+
+	45 minutes: second reminder
+
+	Yay! Time for a break!
+
+	Exercise for 5 minutes
+	Lie down for 5 minutes
+	Hang out
+	Have a snack
+	Go outside
+
+	You've been working for 45 minutes now, that's perfect, you're doing well!
+
+	50 minutes: third reminder
+
+	Do you still remember that you're more important than any work? If you're in communication with someone, just type "brb" and go have a break.
+
+	Exercise for 5 minutes
+	Lie down for 5 minutes
+	Hang out
+	Have a snack
+	Go outside
+
+	You've been working for 50 minutes now.
+
+	1 hour: fourth reminder
+
+	Some work may be important sometimes. Please let me know what you were doing for the records :)
+
+	Do you need help from someone to allow you to disconnect?
+
+	[I'm putting work ahead of myself - reason] [Just 1 more minute and I'll go on a break] [No, no, I'm done, going on a break now]
+
+	You've been working non stop for 1 hour now.
+
+	1 hour 20 minutes:
+
+	Ok fella, let's wrap it up with this work stuff. It's not helping anyone. In 10 minutes we'll have to let your favourite person know what you're up to :)
+
+	You've been working non stop for 1 hour and 22 minutes now.
+
+	1 hour 27 minutes:
+
+	It breaks my heart to see that you put your work ahead of yourself again :( Could you please tell me why you feel you need to go on? It doesn't look like I'm helping much, so in 3 minutes I will have to forward that to your favourite human along with the screenshot of your desktop.
+
+	You've been working non stop for 1 hour and 27 minutes now.
+
+	1 hour 30 minutes:
+
+	Sending the report now, unless you let go of your mouse and keyboard :D
+ 
+	You've been working non stop for 1 hour and 30 minutes now.
+
+	1 hour 31 minutes:
+
+	All right, report sent. 
+
+	You've been working non stop for 1 hour and 31 minutes now.
+
+	2 hours:
+
+	Take a break now! I'm serious!
+
+	You've been working non stop for 2 straight hours now!
+
+	every half an hour:
+
+	Please take a note
+

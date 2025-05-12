@@ -1,0 +1,36 @@
+﻿<Window x:Class="Tetca.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tetca"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Worked today:</Label>
+            <Label Content="{Binding DebugState.WorkedTodayNormie8h}"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Worked this session:</Label>
+            <Label Content="{Binding DebugState.ActivityTime}"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Last stretch of idle time:</Label>
+            <Label Content="{Binding DebugState.CurrentIdleTime}"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Last activity</Label>
+            <Label Content="{Binding DebugState.LastActivity}"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Call detected:</Label>
+            <Label Content="{Binding DebugState.CallDetected}"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Input detected:</Label>
+            <Label Content="{Binding DebugState.InputDetected}"></Label>
+        </StackPanel>
+    </StackPanel>
+</Window>
