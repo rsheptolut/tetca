@@ -105,9 +105,28 @@ namespace Tetca
         {
             // Add logging
             services.AddLogging(logging =>
-            {
+            { 
                 logging.AddDebug();
-                logging.AddJsonFile();
+
+                logging.AddFiles(b =>
+                {
+                    b.AddFile("sf")
+                        .WithOptions(o =>
+                        {
+                            o.Path = Path.GetFullPath("../Tetca.log");
+                            o.Append = true;
+                        })
+                        .WithSimpleFormatter(f =>
+                        {
+                            f.IncludeScopes = true;
+                            f.TimestampFormat = "yyyy-MM-dd HH:mm:ss";
+                            f.InvariantTimestampFormat = true;
+                            f.SingleLine = true;
+                            f.EmptyLineBetweenMessages = false;
+                        });
+                });
+                
+                logging.AddFilter("Tetca", LogLevel.Debug);
             });
 
             // Register application services
@@ -138,7 +157,7 @@ namespace Tetca
             {
                 var settings = sp.GetRequiredService<Settings>();
                 var currentTime = sp.GetRequiredService<ICurrentTime>();
-                var deliberateActivityFilter = new DeliberateActivityFilter(settings.MinCheckCadence, currentTime);
+                var deliberateActivityFilter = new DeliberateActivityFilter(settings.MinCheckCadence, TimeSpan.FromMinutes(1.5), currentTime);
                 return deliberateActivityFilter;
             });
         }

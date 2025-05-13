@@ -187,6 +187,7 @@ namespace Tetca.Logic
             if (this.WorkSessionReminder.IsItTimeToTriggerAnotherReminder(this.ActivityTime, () => !this.SuperBusyRightNow()))
             {
                 this.TriggerWorkedTooMuchInSession();
+                deliberateActivityFilter.Reset();
             }
 
             if (this.DayWorkReminder.IsItTimeToTriggerAnotherReminder(workRecorder.GetTotalNormie8hWorkedToday()))

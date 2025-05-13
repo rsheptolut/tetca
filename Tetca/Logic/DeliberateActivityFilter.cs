@@ -7,19 +7,21 @@ namespace Tetca.Logic
     /// </summary>
     public class DeliberateActivityFilter
     {
+        private readonly TimeSpan timeout;
         private readonly ICurrentTime currentTime;
         private int minorActivityCount;
         private readonly int minimumMinorActivityEventsToConsiderActive;
         private readonly TimeSpan activityMonitoringInterval;
         private DateTime minorActivityStarted;
         private bool deliberateActivityDetected;
+        private DateTime lastActivity;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeliberateActivityFilter"/> class.
         /// </summary>
         /// <param name="minCheckCadence">Mininmum cadence of checks</param>
         /// <param name="currentTime">Current time</param>
-        public DeliberateActivityFilter(TimeSpan minCheckCadence, ICurrentTime currentTime)
+        public DeliberateActivityFilter(TimeSpan minCheckCadence, TimeSpan timeout, ICurrentTime currentTime)
         {
             this.minorActivityCount = 0;
             this.minimumMinorActivityEventsToConsiderActive = 3;
@@ -31,6 +33,7 @@ namespace Tetca.Logic
             }
 
             this.minorActivityStarted = currentTime.Now.Date.AddDays(-1);
+            this.timeout = timeout;
             this.currentTime = currentTime;
         }
 
@@ -44,7 +47,15 @@ namespace Tetca.Logic
         {
             if (this.deliberateActivityDetected)
             {
-                return true;
+                if (this.currentTime.Now - this.lastActivity > this.timeout)
+                {
+                    Reset();
+                }
+                else
+                {
+                    lastActivity = this.currentTime.Now;
+                    return true;
+                }
             }
 
             if (this.currentTime.Now - this.minorActivityStarted > this.activityMonitoringInterval)
@@ -57,6 +68,8 @@ namespace Tetca.Logic
             this.minorActivityCount++;
 
             this.deliberateActivityDetected = this.minorActivityCount >= this.minimumMinorActivityEventsToConsiderActive;
+
+            lastActivity = this.currentTime.Now;
 
             return this.deliberateActivityDetected;
         }

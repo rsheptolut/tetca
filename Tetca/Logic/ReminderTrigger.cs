@@ -46,9 +46,8 @@ namespace Tetca.Logic
                 if (doesThisOneCount?.Invoke() != false)
                 {
                     this.ReminderCount++;
+                    return true;
                 }
-
-                return true;
             }
 
             return false;
