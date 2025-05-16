@@ -321,6 +321,11 @@ namespace Tetca.Logic
             GC.SuppressFinalize(this);
         }
 
+        internal string GetCurrentReportPath()
+        {
+            return Path.Combine(GetReportsDirectory(), GetDayReportFileName(this.GetToday()));
+        }
+
         /// <summary>
         /// Represents the storage model for daily work hours, including activities and summary data.
         /// </summary>

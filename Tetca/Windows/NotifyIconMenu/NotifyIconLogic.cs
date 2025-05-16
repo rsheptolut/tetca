@@ -19,6 +19,7 @@ namespace Tetca.Windows.NotifyIconMenu
         private readonly ISpeech speech;
         private readonly Dispatcher dispatcher;
         private readonly MainLoop mainLoop;
+        private readonly WorkRecorder workRecorder;
         private ToolStripMenuItem TimeDisplay;
 
         /// <summary>
@@ -32,11 +33,12 @@ namespace Tetca.Windows.NotifyIconMenu
         /// <param name="speech">The speech notification service.</param>
         /// <param name="dispatcher">The dispatcher for UI thread operations.</param>
         /// <param name="mainLoop">The main application loop for activity tracking.</param>
-        public NotifyIconLogic(ISpeech speech, Dispatcher dispatcher, MainLoop mainLoop)
+        public NotifyIconLogic(ISpeech speech, Dispatcher dispatcher, MainLoop mainLoop, WorkRecorder workRecorder)
         {
             this.speech = speech;
             this.dispatcher = dispatcher;
             this.mainLoop = mainLoop;
+            this.workRecorder = workRecorder;
             mainLoop.ActivityCheckPerformed += new EventHandler(this.ActivityCheckPerformed);
             this.Icon = new NotifyIcon()
             {
@@ -107,6 +109,7 @@ namespace Tetca.Windows.NotifyIconMenu
                 Enabled = false
             };
             yield return new ToolStripSeparator();
+            yield return this.MenuItemWithClickAction("Open today's report", OpenTodaysReport);
             yield return this.MenuItemWithClickAction("Test voice",
                 () =>
                 this.dispatcher.Invoke(async () =>
@@ -143,6 +146,19 @@ namespace Tetca.Windows.NotifyIconMenu
                 {
                     System.Windows.Application.Current.Shutdown();
                 }));
+        }
+
+        private void OpenTodaysReport()
+        {
+            var path = workRecorder.GetCurrentReportPath();
+            new System.Diagnostics.Process()
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                }
+            }.Start();
         }
 
         /// <summary>

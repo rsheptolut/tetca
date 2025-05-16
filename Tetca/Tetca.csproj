@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="app.ico" />
+    <EmbeddedResource Include="appsettings.new.json" />
     <EmbeddedResource Include="appsettings.default.json" />
   </ItemGroup>
 
