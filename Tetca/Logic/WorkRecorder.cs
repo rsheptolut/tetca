@@ -29,10 +29,10 @@ namespace Tetca.Logic
         /// <param name="latestGoToBedTime">The latest time considered as the end of the day.</param>
         /// <param name="currentTime">An instance of <see cref="ICurrentTime"/> to provide the current time.</param>
         /// <param name="logger">An instance of <see cref="ILogger{WorkRecorder}"/> for logging purposes.</param>
-        public WorkRecorder(TimeSpan minBreak, TimeSpan latestGoToBedTime, ICurrentTime currentTime, ILogger<WorkRecorder> logger)
+        public WorkRecorder(Settings settings, ICurrentTime currentTime, ILogger<WorkRecorder> logger)
         {
-            this.minBreak = minBreak;
-            this.latestGoToBedTime = latestGoToBedTime;
+            this.minBreak = settings.MinBreak;
+            this.latestGoToBedTime = settings.LatestGoToBedTimeForReporting;
             this.currentTime = currentTime;
             this.logger = logger;
             this.jsonSerializerOptions = new JsonSerializerOptions
@@ -42,7 +42,7 @@ namespace Tetca.Logic
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 WriteIndented = true
             };
-            this.maxUnflushedTime = minBreak;
+            this.maxUnflushedTime = settings.MinBreak;
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace Tetca.Logic
             var files = directory.GetFiles();
             var summaryFile = files.FirstOrDefault(f => f.Name == "summary.json");
             var lastUpdatedSummary = summaryFile?.LastWriteTime;
-            var newFiles = files.Where(f => f.Name.StartsWith("daily_") && (lastUpdatedSummary == null || f.LastWriteTime > lastUpdatedSummary)).ToList();
+            var newFiles = files.Where(f => f.Name.StartsWith("daily_") && f.Extension == ".json" && (lastUpdatedSummary == null || f.LastWriteTime > lastUpdatedSummary)).ToList();
             if (newFiles.Count > 0)
             {
                 var totalModel = new List<DaySummary>();
@@ -284,16 +284,23 @@ namespace Tetca.Logic
 
                 foreach (var f in newFiles)
                 {
-                    var model = this.ReadFromJsonFile<WorkHoursDailyStorageModel>(f.FullName);
-                    var day = model.Summary.Day;
-                    var existing = totalModel.FindIndex(d => d.Day == day);
-                    if (existing >= 0)
+                    try
                     {
-                        totalModel[existing] = model.Summary;
+                        var model = this.ReadFromJsonFile<WorkHoursDailyStorageModel>(f.FullName);
+                        var day = model.Summary.Day;
+                        var existing = totalModel.FindIndex(d => d.Day == day);
+                        if (existing >= 0)
+                        {
+                            totalModel[existing] = model.Summary;
+                        }
+                        else
+                        {
+                            totalModel.Add(model.Summary);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        totalModel.Add(model.Summary);
+                        this.logger.LogError(ex, "Failed to load daily report file {dailyFilePath} to incorporate it into a summary.", f.FullName);
                     }
                 }
 

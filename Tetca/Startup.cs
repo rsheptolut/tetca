@@ -145,12 +145,7 @@ namespace Tetca
             services.AddSingleton<ICurrentTime, CurrentTime>();
 
             // Register WorkRecorder with custom initialization
-            services.AddSingleton<WorkRecorder>((IServiceProvider sp) =>
-            {
-                var settings = sp.GetRequiredService<Settings>();
-                var workRecorder = new WorkRecorder(settings.MinBreak, settings.LatestGoToBedTimeForReporting, new CurrentTime(), null);
-                return workRecorder;
-            });
+            services.AddSingleton<WorkRecorder>();
 
             // Register DeliberateActivityFilter with custom initialization
             services.AddSingleton<DeliberateActivityFilter>(sp =>
