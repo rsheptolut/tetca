@@ -1,23 +1,40 @@
-﻿- Include in activity log a summary of what the user was doing - active apps/windows, calls
+﻿- Keep the app quiet when not used
+	- Don't call back to work if it's late
+	- Remind to stop working if it's late
+	- Return sound device settings to what they were before voice notification
+	- Mute sound when it's late and a break is detected, unmute when deliberate activity detected
 
-- Add logging for debugging
-
-- Show a confirmation window to confirm whether you're still working or on break. Then after the break ask if the break was really a break instead of an idle time of thinking sitting at the chair.
-
-- Remove the need to close the program
+- Disincentivize ever closing the program
   - Allow to Snooze - logged?
   - Make closing more difficult (under an option)
   - Log app shutdown and startup times, notify of shutdowns too, including crashes
+  
+- Make more configurable
+	- Text prompts
+	- Plug ins of what to do for all events / plugin trackers (easier to fork than plugin probably)
+	- Modular configuration (for example: work session, break, day work, etc))
+	- Script configuration (allow to define config as a Builder pattern)
+	- Configuration UI
+	- Allow playing sounds like mp3s
+	- Allow to configure 8h normalization
+
+- New tracking features
+	- Include in activity log a summary of what the user was doing - active apps/windows, calls
+	- Show a confirmation window to confirm whether you're still working or on break. Then after the break ask if the break was really a break instead of an idle time of thinking sitting at the chair.
+	- Allow adding/editing entries manually to take account of things that happened out of the laptop. Keep record of which entries were modified.
+	- Show stats - averages&totals for the week/month/year, export to Excel
+	- Make admittable as proof of work
+		- Write only file format / reporting to cloud
+
+- Make more tolerant to error conditions
+	- Add more logging for troubleshooting
+	- Test on PC without .NET 9
+	- Test on PCs without voice engine
+	- I/O, file issues
+	- Computer crashes
+	- Other things not working
 
 - Improve installation experience
-
-- Test on PC without .NET 9
-
-- Test on PCs without voice engine
-
-- React and log exceptions better
-
-- Add more logging for troubleshooting, allow to turn on/off
 
 - Vary the reminders to prevent the user getting used to them
 	- Make the reminder window bigger each time
@@ -28,25 +45,6 @@
 	- Use an AI art generator to supplement messages with images to grab attention
 	- Use some sort of DB of images/quotes, etc
 	- Suggestions of what to do on a break, show 3 options and allow to choose. Each option gets you a reward / penalty?
-
-- Allow playing sounds like mp3s
-
-- Make more configurable
-	- Text prompts
-	- Plug ins of what to do for all events / plugin trackers (easier to fork than plugin probably)
-	- Modular configuration (for example: work session, break, day work, etc))
-	- Script configuration (allow to define config as a Builder pattern)
-	- Configuration UI
-
-- "It's just late" reminders
-	- Don't call back to work if it's late
-	- Remind to stop working if it's late
-
-- Return sound device settings to what they were before voice notification
-
-- Mute sound when it's late and a break is detected, unmute when deliberate activity detected
-
-- Allow to configure 8h normalization
 
 - Chat based reminders: send me messages like a human, accept answers (like a chat bot) with reasoning, work done details, etc
 	40 minutes: first reminder
