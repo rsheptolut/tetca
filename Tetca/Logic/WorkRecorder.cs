@@ -316,7 +316,25 @@ namespace Tetca.Logic
         private void WriteAsJsonFile<T>(string fileName, T model)
         {
             var json = JsonSerializer.Serialize(model, this.jsonSerializerOptions);
-            File.WriteAllText(fileName, json);
+            using (var fs = new FileStream(fileName + ".tmp", FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var sw = new StreamWriter(fs))
+            {
+                sw.Write(json);
+                sw.Flush();
+                fs.Flush(true); // Ensures data is flushed to disk, not just OS cache
+            }
+            try
+            {
+                File.Move(fileName, fileName + ".bak", true);
+
+            }
+            catch { }
+
+            try
+            {
+                File.Move(fileName + ".tmp", fileName, true);
+            }
+            catch { }
         }
 
         /// <summary>
