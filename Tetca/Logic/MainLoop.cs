@@ -9,6 +9,7 @@ using Tetca.Helpers;
 using Tetca.Notifiers;
 using Tetca.Notifiers.Speech;
 using Microsoft.Extensions.Logging;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace Tetca.Logic
 {
@@ -61,6 +62,11 @@ namespace Tetca.Logic
         /// Gets the timestamp of the last detected user activity.
         /// </summary>
         public DateTime LastActive { get; protected set; }
+
+        /// <summary>
+        /// Gets the timestamp of the last activity check
+        /// </summary>
+        public DateTime LastChecked { get; protected set; }
 
         /// <summary>
         /// Forces the main loop to recheck activity immediately.
@@ -133,17 +139,25 @@ namespace Tetca.Logic
         private void Loop()
         {
             var detectors = new IActivityDetector[] { inputDetector, callDetector };
+            this.LastChecked = DateTime.Now;
 
             while (!this.disposedValue)
             {
                 var detected = detectors.Select(d => d.Detect()).ToList();
                 var anyActivityDetected = detected.Any(d => d);
+                var timeSinceLastCheck = currentTime.Now - this.LastChecked;
+                this.LastChecked = DateTime.Now;
+                if (anyActivityDetected && timeSinceLastCheck >= settings.MaxCheckCadence + TimeSpan.FromSeconds(5))
+                {
+                    // system was probably suspended or hibernated, so let's simulate an idle (no activity) event this time to allow a break to be recorded for this idle time
+                    anyActivityDetected = false;
+                }
 
-                this.PerformActivityCheck(anyActivityDetected, this.TimePassedDuringWait);
+                this.PerformActivityCheck(anyActivityDetected);
 
                 ActivityCheckPerformed?.Invoke(this, EventArgs.Empty);
 
-                this.SleepUntilNextCheck();
+                this.UpdateThreadWaiter.WaitOne(this.TimeUntilNextCheck);
             }
         }
 
@@ -151,8 +165,7 @@ namespace Tetca.Logic
         /// Performs an activity check to determine if a break or reminder is needed.
         /// </summary>
         /// <param name="anyActivityDetected">Indicates if any activity was detected.</param>
-        /// <param name="timePassedDuringWait">The time elapsed since the last check.</param>
-        public void PerformActivityCheck(bool anyActivityDetected, TimeSpan timePassedDuringWait)
+        public void PerformActivityCheck(bool anyActivityDetected)
         {
             if (anyActivityDetected)
             {
@@ -160,16 +173,24 @@ namespace Tetca.Logic
                 {
                     this.DeliberateActivityDetected();
                 }
+                else
+                {
+                    logger.LogDebug("Activity detected, but not deemed deliberate yet");
+                }
             }
             else
             {
                 // No activity detected time time, but this doesn't mean much by itself
 
-                if (TimeSpanExtensions.Max(this.CurrentIdleTime, timePassedDuringWait) > settings.MinBreak)
+                if (this.CurrentIdleTime > settings.MinBreak)
                 {
                     // Looks like a proper break was taken!
 
                     this.BreakDetected();
+                }
+                else
+                {
+                    logger.LogDebug("No activity detected, but not calling a break yet.");
                 }
             }
         }
@@ -310,17 +331,6 @@ namespace Tetca.Logic
         private bool SuperBusyRightNow()
         {
             return callDetector.IsActive || callDetector.LastActive >= currentTime.Now - settings.MinCheckCadence;
-        }
-
-        /// <summary>
-        /// Puts the main loop to sleep until the next check is due.
-        /// </summary>
-        private void SleepUntilNextCheck()
-        {
-            this.stopwatch.Restart();
-            this.UpdateThreadWaiter.WaitOne(this.TimeUntilNextCheck);
-            this.stopwatch.Stop();
-            this.TimePassedDuringWait = this.stopwatch.Elapsed;
         }
 
         /// <summary>

@@ -38,6 +38,9 @@ namespace Tetca
         {
             this.App = app;
 
+            app.DispatcherUnhandledException += this.App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += this.CurrentDomain_UnhandledException;
+
             // App configuration
             var configuration = this.SetupAppConfiguration();
 
@@ -52,6 +55,24 @@ namespace Tetca
 
             // Build service provider
             this.ServiceProvider = services.BuildServiceProvider();
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var logger = this.ServiceProvider.GetService<ILogger<App>>();
+            if (logger != null && e.ExceptionObject is Exception ex)
+            {
+                logger.LogError(ex, "Unhandled exception in AppDomain.");
+            }
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            var logger = this.ServiceProvider.GetService<ILogger<App>>();
+            if (logger != null && e.Exception is not null)
+            {
+                logger.LogError(e.Exception, "Unhandled exception.");
+            }
         }
 
         /// <summary>

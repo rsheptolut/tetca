@@ -204,8 +204,7 @@ namespace Tetca.Logic
                 catch (Exception ex)
                 {
                     this.logger.LogError(ex, "Failed to load daily report file {dailyFilePath}", dailyFilePath);
-                    File.Delete(dailyFilePath + ".bak");
-                    File.Move(dailyFilePath, dailyFilePath + ".bak");
+                    File.Move(dailyFilePath, dailyFilePath + ".bak", true);
                 }
             }
             
@@ -323,16 +322,28 @@ namespace Tetca.Logic
                 sw.Flush();
                 fs.Flush(true); // Ensures data is flushed to disk, not just OS cache
             }
+
+            int success = 0;
             try
             {
                 File.Move(fileName, fileName + ".bak", true);
-
+                success++;
             }
             catch { }
 
             try
             {
                 File.Move(fileName + ".tmp", fileName, true);
+                success++;
+            }
+            catch { }
+
+            try
+            {
+                if (success == 2)
+                {
+                    File.Delete(fileName + ".bak");
+                }
             }
             catch { }
         }
