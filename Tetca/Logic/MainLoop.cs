@@ -17,7 +17,7 @@ namespace Tetca.Logic
     /// The MainLoop class is the core of the application, responsible for managing activity detection, break reminders, and escalation notifications.
     /// It continuously monitors user activity and enforces work-break balance based on configurable settings.
     /// </summary>
-    public class MainLoop(WorkRecorder workRecorder, DeliberateActivityFilter deliberateActivityFilter, HumanEscalator humanEscalator, CallDetector callDetector, InputDetector inputDetector, ISpeech speech, Settings settings, Dispatcher dispatcher, ICurrentTime currentTime, ILogger<MainLoop> logger) : IDisposable
+    public class MainLoop(WorkRecorder workRecorder, DeliberateActivityFilter deliberateActivityFilter, HumanEscalator humanEscalator, CallDetector callDetector, InputDetector inputDetector, ISpeech speech, Settings settings, Dispatcher dispatcher, ICurrentTime currentTime, ILogger<MainLoop> logger, DoNotDisturb doNotDisturb) : IDisposable
     {
         private readonly Stopwatch stopwatch = new();
         private readonly AutoResetEvent UpdateThreadWaiter = new AutoResetEvent(false);
@@ -125,11 +125,11 @@ namespace Tetca.Logic
             this.LastActive = currentTime.Now;
             this.LastBreak = workRecorder.GetLastBreakEnded();
             this.WorkSessionReminder = new ReminderTrigger(currentTime, i => i == 0 ? settings.MaxWorkSession : settings.SubsequentReminderInterval);
-            this.IdleTimeReminder = new ReminderTrigger(currentTime, _ => settings.MaxBreak, 3);
+            this.IdleTimeReminder = new ReminderTrigger(currentTime, _ => settings.MaxBreak, 3, t => !doNotDisturb.ShouldBeOn(t));
             this.IdleTimeReminder.Reset(3); // don't show idle time reminder right after starting the program
             this.DayWorkReminder = new ReminderTrigger(currentTime, i => i == 0 ? settings.MaxDayWorkTime : settings.DayWorkTimeNotificationInterval);
             this.DayWorkReminder.Reset(workRecorder.GetTotalNormie8hWorkedToday());
-            _ = speech.SpeakOnSoundDevice(settings.SayOnStartup);
+            speech.SpeakOnSoundDevice(settings.SayOnStartup);
             logger.LogDebug("Startup finished");
         }
 
@@ -153,6 +153,7 @@ namespace Tetca.Logic
                     anyActivityDetected = false;
                 }
 
+                doNotDisturb.ToggleIfNeeded();
                 this.PerformActivityCheck(anyActivityDetected);
 
                 ActivityCheckPerformed?.Invoke(this, EventArgs.Empty);
@@ -241,7 +242,7 @@ namespace Tetca.Logic
         {
             logger.LogDebug("VoiceNotification({text})", text);
             text ??= settings.VoiceNotificationTextProgression?[this.WorkSessionReminder.ReminderCount - 1] ?? "Time for a break, bud!";
-            _ = speech.SpeakOnSoundDevice(text);
+            speech.SpeakOnSoundDevice(text);
         }
 
         /// <summary>

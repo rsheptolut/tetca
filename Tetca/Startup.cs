@@ -157,7 +157,12 @@ namespace Tetca
             services.AddSingleton<ISpeech, DefaultSpeech>();
             services.AddSingleton<InputDetector>();
             services.AddSingleton<CallDetector>();
-            services.AddSingleton<SoundDeviceManager>();
+            services.AddSingleton<DoNotDisturb>();
+            services.AddSingleton<SoundDeviceManager>(sp =>
+            {
+                var settings = sp.GetRequiredService<Settings>();
+                return new SoundDeviceManager(settings.VoiceNotificationSoundDevice);
+            });
             services.AddSingleton<HumanEscalator>();
             services.AddSingleton(this.App.Dispatcher);
             services.AddSingleton<DebugState>();

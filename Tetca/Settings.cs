@@ -112,5 +112,15 @@ namespace Tetca
         /// Time of day when you're most likely to already be in bed yet very unlikely to already be up. This helps to shift your workday into the later hours instead of treating the midnight as the end of your workday.
         /// </summary>
         public TimeSpan LatestGoToBedTimeForReporting { get; set; }
+
+        /// <summary>
+        /// Start of work hours (will unmute the speaker)
+        /// </summary>
+        public TimeSpan WorkHoursFrom { get; set; }
+
+        /// <summary>
+        /// End of work hours (will mute the speaker)
+        /// </summary>
+        public TimeSpan WorkHoursTo { get; set; }
     }
 }

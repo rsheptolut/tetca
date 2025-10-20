@@ -109,12 +109,12 @@ namespace Tetca.Windows.NotifyIconMenu
                 Enabled = false
             };
             yield return new ToolStripSeparator();
-            yield return this.MenuItemWithClickAction("Open today's report", OpenTodaysReport);
+            yield return this.MenuItemWithClickAction("Open today's report", this.OpenTodaysReport);
             yield return this.MenuItemWithClickAction("Test voice",
                 () =>
-                this.dispatcher.Invoke(async () =>
+                this.dispatcher.Invoke(() =>
                 {
-                    await this.speech.SpeakOnSoundDevice("Testing testing");
+                    this.speech.SpeakOnSoundDevice("Testing testing");
                 }));
             yield return new ToolStripSeparator();
             yield return this.MenuItemWithClickAction("Support the developer",
@@ -150,7 +150,7 @@ namespace Tetca.Windows.NotifyIconMenu
 
         private void OpenTodaysReport()
         {
-            var path = workRecorder.GetCurrentReportPath();
+            var path = this.workRecorder.GetCurrentReportPath();
             new System.Diagnostics.Process()
             {
                 StartInfo = new System.Diagnostics.ProcessStartInfo

@@ -8,7 +8,8 @@ namespace Tetca.Logic
     /// <param name="currentTime">An instance of <see cref="ICurrentTime"/> to provide the current time.</param>
     /// <param name="getInterval">A function to calculate the interval between reminders based on the reminder count.</param>
     /// <param name="maxReminders">The maximum number of reminders allowed. Null for unlimited reminders.</param>
-    internal class ReminderTrigger(ICurrentTime currentTime, Func<int, TimeSpan> getInterval, int? maxReminders = null)
+    /// <param name="isAGoodTime">Optional predicate to check if it's a good time to trigger a reminder.</param>
+    internal class ReminderTrigger(ICurrentTime currentTime, Func<int, TimeSpan> getInterval, int? maxReminders = null, Func<DateTime, bool> isAGoodTime = null)
     {
         /// <summary>
         /// Gets or sets the total time already reminded.
@@ -38,10 +39,11 @@ namespace Tetca.Logic
         /// <returns>True if it is time to trigger another reminder; otherwise, false.</returns>
         public bool IsItTimeToTriggerAnotherReminder(TimeSpan totalTime, Func<bool> doesThisOneCount = null)
         {
-            if (!(this.ReminderCount > maxReminders) && totalTime - this.AlreadyReminded > this.ReminderInterval)
+            var now = currentTime.Now;
+            if (!(this.ReminderCount > maxReminders) && totalTime - this.AlreadyReminded > this.ReminderInterval && isAGoodTime?.Invoke(now) != false)
             {
                 this.AlreadyReminded = totalTime;
-                this.LastReminder = currentTime.Now;
+                this.LastReminder = now;
 
                 if (doesThisOneCount?.Invoke() != false)
                 {

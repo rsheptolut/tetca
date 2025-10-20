@@ -49,11 +49,11 @@ namespace Tetca.Logic
             {
                 if (this.currentTime.Now - this.lastActivity > this.timeout)
                 {
-                    Reset();
+                    this.Reset();
                 }
                 else
                 {
-                    lastActivity = this.currentTime.Now;
+                    this.lastActivity = this.currentTime.Now;
                     return true;
                 }
             }
@@ -69,7 +69,7 @@ namespace Tetca.Logic
 
             this.deliberateActivityDetected = this.minorActivityCount >= this.minimumMinorActivityEventsToConsiderActive;
 
-            lastActivity = this.currentTime.Now;
+            this.lastActivity = this.currentTime.Now;
 
             return this.deliberateActivityDetected;
         }

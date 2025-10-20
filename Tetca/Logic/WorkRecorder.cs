@@ -152,7 +152,7 @@ namespace Tetca.Logic
                 }
                 else
                 {
-                    RecalcGrandTotals();
+                    this.RecalcGrandTotals();
                 }
             }
         }
