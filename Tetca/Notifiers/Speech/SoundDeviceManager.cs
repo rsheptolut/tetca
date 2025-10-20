@@ -42,8 +42,8 @@ namespace Tetca.Notifiers.Speech
                 if (previousDevice != null)
                 {
                     if (previousDevice.Name != defaultDevice.DeviceFriendlyName ||
-                        previousDevice.Volume != defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar ||
-                        previousDevice.IsMuted != defaultDevice.AudioEndpointVolume.Mute)
+                        previousDevice.Volume != 1 ||
+                        previousDevice.IsMuted != false)
                     {
                         this.previousDevice = previousDevice;
                     }

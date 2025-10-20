@@ -12,7 +12,7 @@ namespace Tetca.Logic
 
         internal bool ShouldBeOn(DateTime time)
         {
-            return time.TimeOfDay >= settings.WorkHoursFrom && time.TimeOfDay < settings.WorkHoursTo;
+            return !(time.TimeOfDay >= settings.WorkHoursFrom && time.TimeOfDay < settings.WorkHoursTo);
         }
 
         internal void ToggleIfNeeded()

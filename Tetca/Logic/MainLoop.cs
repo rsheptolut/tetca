@@ -129,6 +129,7 @@ namespace Tetca.Logic
             this.IdleTimeReminder.Reset(3); // don't show idle time reminder right after starting the program
             this.DayWorkReminder = new ReminderTrigger(currentTime, i => i == 0 ? settings.MaxDayWorkTime : settings.DayWorkTimeNotificationInterval);
             this.DayWorkReminder.Reset(workRecorder.GetTotalNormie8hWorkedToday());
+            doNotDisturb.ToggleIfNeeded();
             speech.SpeakOnSoundDevice(settings.SayOnStartup);
             logger.LogDebug("Startup finished");
         }
